@@ -6,22 +6,17 @@
 //
 
 import Foundation
-import GRDB
 import CodeEditSourceEditor
 import OSLog
 
 /// CodeEdit attempts to store and retrieve editor state for open tabs to restore the user's scroll position and
 /// cursor positions between sessions. This class manages the storage mechanism to facilitate that feature.
 ///
-/// This creates a sqlite database in the application support directory named `editor-restoration.db`.
+/// This stores a JSON file in the application support directory named `editor-restoration.json`, mapping a file's
+/// absolute path to its saved restoration state.
 ///
-/// To ensure we can query this quickly, this class is shared globally (to avoid having to use a database pool) and
-/// all writes and reads are synchronous.
-///
-/// # If changes are required
-///
-/// Use the database migrator in the initializer for this class, see GRDB's documentation for adding a migration
-/// version. **Do not ever** delete migration versions that have made it to a released version of CodeEdit.
+/// To ensure we can query this quickly, this class is shared globally and all reads/writes are synchronized on a
+/// private serial queue.
 final class EditorStateRestoration {
     /// Optional here so we can gracefully catch errors.
     /// The nice thing is this feature is optional in that if we don't have it available the user's experience is
@@ -32,11 +27,6 @@ final class EditorStateRestoration {
         subsystem: Bundle.main.bundleIdentifier ?? "",
         category: "EditorStateRestoration"
     )
-
-    struct StateRestorationRecord: Codable, TableRecord, FetchableRecord, PersistableRecord {
-        let uri: String
-        let data: Data
-    }
 
     struct StateRestorationData: Codable, Equatable {
         // Cursor positions as range values (not row/column!)
@@ -61,47 +51,45 @@ final class EditorStateRestoration {
         }
     }
 
-    private var databaseQueue: DatabaseQueue?
-    private var databaseURL: URL
+    private let queue = DispatchQueue(label: "app.codeedit.EditorStateRestoration")
+    private var storage: [String: StateRestorationData]
+    private let fileURL: URL
 
-    /// Create a new editor restoration object. Will connect to or create a SQLite db.
-    /// - Parameter databaseURL: The database URL to use. Must point to a file, not a directory. If left `nil`, will
-    ///                          create a new database named `editor-restoration.db` in the application support
-    ///                          directory.
-    init(_ databaseURL: URL? = nil) throws {
-        self.databaseURL = databaseURL ?? FileManager.default
+    /// Create a new editor restoration object. Will read from or create a JSON store.
+    /// - Parameter fileURL: The file URL to use. Must point to a file, not a directory. If left `nil`, will
+    ///                       create a new file named `editor-restoration.json` in the application support
+    ///                       directory.
+    init(_ fileURL: URL? = nil) throws {
+        self.fileURL = fileURL ?? FileManager.default
             .homeDirectoryForCurrentUser
             .appending(path: "Library/Application Support/CodeEdit", directoryHint: .isDirectory)
-            .appending(path: "editor-restoration.db", directoryHint: .notDirectory)
-        try attemptMigration(retry: true)
+            .appending(path: "editor-restoration.json", directoryHint: .notDirectory)
+        do {
+            self.storage = try Self.loadStorage(from: self.fileURL)
+        } catch {
+            // Corrupted file, might fix by starting fresh.
+            try? FileManager.default.removeItem(at: self.fileURL)
+            self.storage = [:]
+        }
+        try persist()
     }
 
-    func attemptMigration(retry: Bool) throws {
-        do {
-            let databaseQueue = try DatabaseQueue(path: self.databaseURL.absolutePath, configuration: .init())
-
-            var migrator = DatabaseMigrator()
-
-            migrator.registerMigration("Version 0") {
-                try $0.create(table: "stateRestorationRecord") { table in
-                    table.column("uri", .text).primaryKey().notNull()
-                    table.column("data", .blob).notNull()
-                }
-            }
-
-            try migrator.migrate(databaseQueue)
-            self.databaseQueue = databaseQueue
-        } catch {
-            if retry {
-                // Try to delete the database on failure, might fix a corruption or version error.
-                try? FileManager.default.removeItem(at: databaseURL)
-                try attemptMigration(retry: false)
-
-                return // Ignore the original error if we're retrying
-            }
-            Self.logger.error("Failed to start database connection: \(error)")
-            throw error
+    private static func loadStorage(from fileURL: URL) throws -> [String: StateRestorationData] {
+        guard FileManager.default.fileExists(atPath: fileURL.absolutePath) else {
+            return [:]
         }
+        let data = try Data(contentsOf: fileURL)
+        return try JSONDecoder().decode([String: StateRestorationData].self, from: data)
+    }
+
+    /// Write the in-memory storage to disk.
+    private func persist() throws {
+        try FileManager.default.createDirectory(
+            at: fileURL.deletingLastPathComponent(),
+            withIntermediateDirectories: true
+        )
+        let data = try JSONEncoder().encode(storage)
+        try data.write(to: fileURL, options: .atomic)
     }
 
     /// Update saved restoration state of a document.
@@ -109,12 +97,13 @@ final class EditorStateRestoration {
     ///   - documentUrl: The URL of the document.
     ///   - data: The data to store for the file, retrieved using ``restorationState(for:)``.
     func updateRestorationState(for documentUrl: URL, data: StateRestorationData) {
-        do {
-            let serializedData = try JSONEncoder().encode(data)
-            let dbRow = StateRestorationRecord(uri: documentUrl.absolutePath, data: serializedData)
-            try databaseQueue?.write { try dbRow.upsert($0) }
-        } catch {
-            Self.logger.error("Failed to save editor state: \(error)")
+        queue.sync {
+            storage[documentUrl.absolutePath] = data
+            do {
+                try persist()
+            } catch {
+                Self.logger.error("Failed to save editor state: \(error)")
+            }
         }
     }
 
@@ -122,17 +111,8 @@ final class EditorStateRestoration {
     /// - Parameter documentUrl: The URL of the document.
     /// - Returns: Any data saved for this file.
     func restorationState(for documentUrl: URL) -> StateRestorationData? {
-        do {
-            guard let row = try databaseQueue?.read({
-                try StateRestorationRecord.fetchOne($0, key: documentUrl.absolutePath)
-            }) else {
-                return nil
-            }
-            let decodedData = try JSONDecoder().decode(StateRestorationData.self, from: row.data)
-            return decodedData
-        } catch {
-            Self.logger.error("Failed to find editor state for '\(documentUrl.absolutePath)': \(error)")
+        queue.sync {
+            storage[documentUrl.absolutePath]
         }
-        return nil
     }
 }
