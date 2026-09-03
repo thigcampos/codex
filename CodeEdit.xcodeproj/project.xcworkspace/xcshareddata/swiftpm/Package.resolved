@@ -1,5 +1,5 @@
 {
-  "originHash" : "01191ca9685501db65981a6fd21ab2d11c32196633d4cb776b5bb25908ed212f",
+  "originHash" : "6d992a221401fe2ca62ec4ee992e195dbc1a4fd2f72776a93f641461d676c20b",
   "pins" : [
     {
       "identity" : "aboutwindow",
@@ -8,24 +8,6 @@
       "state" : {
         "revision" : "bdec18efb0dbee79613e7efa446ed3cc8e834842",
         "version" : "1.0.1"
-      }
-    },
-    {
-      "identity" : "anycodable",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/Flight-School/AnyCodable",
-      "state" : {
-        "revision" : "862808b2070cd908cb04f9aafe7de83d35f81b05",
-        "version" : "0.6.7"
-      }
-    },
-    {
-      "identity" : "codeeditkit",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/CodeEditApp/CodeEditKit.git",
-      "state" : {
-        "revision" : "ad28213a968586abb0cb21a8a56a3587227895f1",
-        "version" : "0.1.2"
       }
     },
     {
@@ -74,30 +56,12 @@
       }
     },
     {
-      "identity" : "concurrencyplus",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/ChimeHQ/ConcurrencyPlus",
-      "state" : {
-        "revision" : "8dc56499412a373d617d50d059116bccf44b9874",
-        "version" : "0.4.2"
-      }
-    },
-    {
       "identity" : "fseventswrapper",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Frizlab/FSEventsWrapper",
       "state" : {
         "revision" : "70bbea4b108221fcabfce8dbced8502831c0ae04",
         "version" : "2.1.0"
-      }
-    },
-    {
-      "identity" : "grdb.swift",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/groue/GRDB.swift.git",
-      "state" : {
-        "revision" : "2cf6c756e1e5ef6901ebae16576a7e4e4b834622",
-        "version" : "6.29.3"
       }
     },
     {
