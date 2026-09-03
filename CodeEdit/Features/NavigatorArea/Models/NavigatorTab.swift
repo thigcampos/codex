@@ -6,14 +6,11 @@
 //
 
 import SwiftUI
-import CodeEditKit
-import ExtensionFoundation
 
 enum NavigatorTab: WorkspacePanelTab {
     case project
     case sourceControl
     case search
-    case uiExtension(endpoint: AppExtensionIdentity, data: ResolvedSidebar.SidebarStore)
 
     var systemImage: String {
         switch self {
@@ -23,15 +20,10 @@ enum NavigatorTab: WorkspacePanelTab {
             return "vault"
         case .search:
             return "magnifyingglass"
-        case .uiExtension(_, let data):
-            return data.icon ?? "e.square"
         }
     }
 
     var id: String {
-        if case .uiExtension(let endpoint, let data) = self {
-            return endpoint.bundleIdentifier + data.sceneID
-        }
         return title
     }
 
@@ -43,8 +35,6 @@ enum NavigatorTab: WorkspacePanelTab {
             return "Source Control"
         case .search:
             return "Search"
-        case .uiExtension(_, let data):
-            return data.help ?? data.sceneID
         }
     }
 
@@ -56,8 +46,6 @@ enum NavigatorTab: WorkspacePanelTab {
             SourceControlNavigatorView()
         case .search:
             FindNavigatorView()
-        case let .uiExtension(endpoint, data):
-            ExtensionSceneView(with: endpoint, sceneID: data.sceneID)
         }
     }
 
@@ -73,8 +61,6 @@ enum NavigatorTab: WorkspacePanelTab {
             }
         case .search:
             FindNavigatorToolbarBottom()
-        case .uiExtension:
-            EmptyView()
         }
     }
 }

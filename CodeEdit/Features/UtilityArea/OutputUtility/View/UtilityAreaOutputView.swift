@@ -10,14 +10,11 @@ import LogStream
 
 struct UtilityAreaOutputView: View {
     enum Sources: Hashable {
-        case extensions(ExtensionUtilityAreaOutputSource)
         case languageServer(LanguageServerLogContainer)
         case devOutput
 
         var title: String {
             switch self {
-            case .extensions(let source):
-                "Extension - \(source.extensionInfo.name)"
             case .languageServer(let source):
                 "Language Server - \(source.id)"
             case .devOutput:
@@ -27,8 +24,6 @@ struct UtilityAreaOutputView: View {
 
         public static func == (_ lhs: Sources, _ rhs: Sources) -> Bool {
             switch (lhs, rhs) {
-            case let (.extensions(lhs), .extensions(rhs)):
-                return lhs.id == rhs.id
             case let (.languageServer(lhs), .languageServer(rhs)):
                 return lhs.id == rhs.id
             case (.devOutput, .devOutput):
@@ -40,9 +35,6 @@ struct UtilityAreaOutputView: View {
 
         func hash(into hasher: inout Hasher) {
             switch self {
-            case .extensions(let source):
-                hasher.combine(0)
-                hasher.combine(source.id)
             case .languageServer(let source):
                 hasher.combine(1)
                 hasher.combine(source.id)
@@ -62,10 +54,6 @@ struct UtilityAreaOutputView: View {
             Group {
                 if let selectedSource {
                     switch selectedSource {
-                    case .extensions(let source):
-                        UtilityAreaOutputLogList(source: source, filterText: $filterText) {
-                            UtilityAreaOutputSourcePicker(selectedSource: $selectedSource)
-                        }
                     case .languageServer(let source):
                         UtilityAreaOutputLogList(source: source, filterText: $filterText) {
                             UtilityAreaOutputSourcePicker(selectedSource: $selectedSource)

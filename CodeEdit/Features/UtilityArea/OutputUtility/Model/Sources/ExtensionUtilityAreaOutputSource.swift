@@ -26,19 +26,3 @@ extension LogMessage: @retroactive Identifiable, UtilityAreaOutputMessage {
         }
     }
 }
-
-struct ExtensionUtilityAreaOutputSource: UtilityAreaOutputSource {
-    var id: String {
-        "extension_output" + extensionInfo.id
-    }
-
-    let extensionInfo: ExtensionInfo
-
-    func cachedMessages() -> [LogMessage] {
-        []
-    }
-
-    func streamMessages() -> AsyncStream<LogMessage> {
-        LogStream.logs(for: extensionInfo.pid, flags: [.info, .historical, .processOnly])
-    }
-}
