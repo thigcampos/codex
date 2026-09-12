@@ -35,11 +35,11 @@ struct EditorTabsOverflowShadow: View {
                     startPoint: startPoint,
                     endPoint: endPoint
                 )
-                .opacity(
-                    colorScheme == .dark
-                    ? activeState == .inactive ? 0.25882353 : 1
-                    : activeState == .inactive ? 0.09803922 : 0.25882353
-                )
+//                .opacity(
+//                    colorScheme == .dark
+//                    ? activeState == .inactive ? 0.25882353 : 1
+//                    : activeState == .inactive ? 0.09803922 : 0.25882353
+//                )
             )
             .allowsHitTesting(false)
     }
