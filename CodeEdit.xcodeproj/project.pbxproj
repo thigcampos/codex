@@ -97,7 +97,7 @@
 		6C67413D2C44A28C00AABDF5 /* ProjectNavigatorViewController+DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProjectNavigatorViewController+DataSource.swift"; sourceTree = "<group>"; };
 		6C67413F2C44A2A200AABDF5 /* ProjectNavigatorViewController+Delegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProjectNavigatorViewController+Delegate.swift"; sourceTree = "<group>"; };
 		6C9619262C3F285C009733CE /* CodeEditTestPlan.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CodeEditTestPlan.xctestplan; sourceTree = "<group>"; };
-		B658FB2C27DA9E0F00EA4DBD /* CodeEdit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CodeEdit.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B658FB2C27DA9E0F00EA4DBD /* Builder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Builder.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B658FB3D27DA9E1000EA4DBD /* CodeEditTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CodeEditTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B658FB4727DA9E1000EA4DBD /* CodeEditUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CodeEditUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B6FF04772B6C08AC002C2C78 /* DefaultThemes */ = {isa = PBXFileReference; lastKnownFileType = folder; path = DefaultThemes; sourceTree = "<group>"; };
@@ -109,7 +109,7 @@
 			membershipExceptions = (
 				Info.plist,
 			);
-			target = B658FB2B27DA9E0F00EA4DBD /* CodeEdit */;
+			target = B658FB2B27DA9E0F00EA4DBD /* Builder */;
 		};
 		B62454D02D78A3D8009A86D1 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
@@ -220,7 +220,7 @@
 		B658FB2D27DA9E0F00EA4DBD /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B658FB2C27DA9E0F00EA4DBD /* CodeEdit.app */,
+				B658FB2C27DA9E0F00EA4DBD /* Builder.app */,
 				B658FB3D27DA9E1000EA4DBD /* CodeEditTests.xctest */,
 				B658FB4727DA9E1000EA4DBD /* CodeEditUITests.xctest */,
 				2BE487EC28245162003F3F64 /* OpenWithCodeEdit.appex */,
@@ -248,9 +248,9 @@
 			productReference = 2BE487EC28245162003F3F64 /* OpenWithCodeEdit.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
-		B658FB2B27DA9E0F00EA4DBD /* CodeEdit */ = {
+		B658FB2B27DA9E0F00EA4DBD /* Builder */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B658FB5127DA9E1000EA4DBD /* Build configuration list for PBXNativeTarget "CodeEdit" */;
+			buildConfigurationList = B658FB5127DA9E1000EA4DBD /* Build configuration list for PBXNativeTarget "Builder" */;
 			buildPhases = (
 				B658FB2827DA9E0F00EA4DBD /* Sources */,
 				B658FB2927DA9E0F00EA4DBD /* Frameworks */,
@@ -269,7 +269,7 @@
 				816BB1303036109C008206B6 /* ProductIcons */,
 				B624520B2D78A3CC009A86D1 /* CodeEdit */,
 			);
-			name = CodeEdit;
+			name = Builder;
 			packageProductDependencies = (
 				2816F593280CF50500DD548B /* CodeEditSymbols */,
 				58F2EB1D292FB954004A9BDE /* Sparkle */,
@@ -286,7 +286,7 @@
 				AF36BAE23049E74F00991096 /* CodeEditSourceEditor */,
 			);
 			productName = CodeEdit;
-			productReference = B658FB2C27DA9E0F00EA4DBD /* CodeEdit.app */;
+			productReference = B658FB2C27DA9E0F00EA4DBD /* Builder.app */;
 			productType = "com.apple.product-type.application";
 		};
 		B658FB3C27DA9E1000EA4DBD /* CodeEditTests */ = {
@@ -393,7 +393,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				B658FB2B27DA9E0F00EA4DBD /* CodeEdit */,
+				B658FB2B27DA9E0F00EA4DBD /* Builder */,
 				B658FB3C27DA9E1000EA4DBD /* CodeEditTests */,
 				B658FB4627DA9E1000EA4DBD /* CodeEditUITests */,
 				2BE487EB28245162003F3F64 /* OpenWithCodeEdit */,
@@ -497,12 +497,12 @@
 		};
 		B658FB3F27DA9E1000EA4DBD /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = B658FB2B27DA9E0F00EA4DBD /* CodeEdit */;
+			target = B658FB2B27DA9E0F00EA4DBD /* Builder */;
 			targetProxy = B658FB3E27DA9E1000EA4DBD /* PBXContainerItemProxy */;
 		};
 		B658FB4927DA9E1000EA4DBD /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = B658FB2B27DA9E0F00EA4DBD /* CodeEdit */;
+			target = B658FB2B27DA9E0F00EA4DBD /* Builder */;
 			targetProxy = B658FB4827DA9E1000EA4DBD /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -1548,7 +1548,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B658FB5127DA9E1000EA4DBD /* Build configuration list for PBXNativeTarget "CodeEdit" */ = {
+		B658FB5127DA9E1000EA4DBD /* Build configuration list for PBXNativeTarget "Builder" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B658FB5227DA9E1000EA4DBD /* Debug */,
